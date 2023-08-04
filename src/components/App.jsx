@@ -7,6 +7,7 @@ import {Container,
   Breaker,
   Message,} from './App.styled';
 import { useState, useEffect } from "react";
+import {addContact,deleteContact} from '../redux/contactsSlice'
 
 export const App =()=> {
   const [contacts,setContacts] = useState(()=>
