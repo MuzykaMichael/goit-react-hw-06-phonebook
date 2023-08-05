@@ -1,18 +1,23 @@
 import propTypes from 'prop-types'
 import { ContactsList } from "./ListContacts.styled";
 import { Contact } from "components/Contact/Contact";
+import { useSelector } from 'react-redux';
+import { getContacts } from 'redux/selectors';
+import { deleteContact } from 'redux/contactsSlice';
 
-export const ListContacts = ({contacts,handleDelete}) =>{
+export const ListContacts = () =>{
+    const contacts = useSelector(getContacts);
+
         return(
             <ContactsList>
-                {contacts.map(({name,number,id}) =>{
+                {contacts.contacts.map(({name,number,id}) =>{
                     return(
                         <Contact
                         key={id}
                         id={id}
                         name={name}
                         number={number}
-                        onDeleteContact={handleDelete}
+                        onDeleteContact={deleteContact}
                         />
                     );
                 })}

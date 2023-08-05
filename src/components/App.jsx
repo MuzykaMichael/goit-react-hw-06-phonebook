@@ -6,26 +6,26 @@ import {Container,
   SecondTitle,
   Breaker,
   Message,} from './App.styled';
-import { useState, useEffect } from "react";
-import {addContact,deleteContact} from '../redux/contactsSlice'
+import { useSelector, useDispatch } from "react-redux";
+import { getContacts, getFilter } from "redux/selectors";
+import { addContact, deleteContact } from "redux/contactsSlice";
+import { addFilter } from "redux/filterSlice";
 
 export const App =()=> {
-  const [contacts,setContacts] = useState(()=>
-    JSON.parse(localStorage.getItem('contacts')) ?? [ ]);
-  const [filter,setFilter] = useState('');
-  useEffect (()=>{
-    localStorage.setItem('contacts',JSON.stringify(contacts))
-  },[contacts])
+  const dispatch = useDispatch();
+  const contacts = useSelector(getContacts)
+  const filter = useSelector(getFilter)
+  console.log(contacts.contacts[0].name)
 
   const formSubmitHandle = newContact =>{
-    const sameContact = contacts.find(
+    const sameContact = contacts.contacts.find(
       ({name,number})=>name.toLowerCase()===newContact.name.toLowerCase() || number===newContact.number
     );
     if (sameContact) {
       alert(`${newContact.name} or ${newContact.number} is already exists.`)
       return
     }
-    setContacts([...contacts,newContact])
+    dispatch(addContact(newContact))
   };
 
 
@@ -33,25 +33,17 @@ export const App =()=> {
 
   
   const filterHandle = nameQuery => {
-    setFilter(nameQuery);
+    dispatch(addFilter(nameQuery));
   };
 
   const contactsDeleteHandler = idToDelete => {
-    setContacts(()=>{
-      const updContactsArr = [...contacts].filter(
-        ({id}) => id!==idToDelete
-      );
-      return updContactsArr;
-
-    });
+    dispatch(deleteContact(idToDelete))
   }
 
 
 
-
-
-    const filteredContacts = Object.values(contacts).filter(({name})=>{
-      return name.toLowerCase().includes(filter.toLowerCase())
+    const filteredContacts = Object.values(contacts.contacts).filter(({name})=>{
+      return name.toLowerCase().includes(filter.filter.toLowerCase())
     });
 
     return(

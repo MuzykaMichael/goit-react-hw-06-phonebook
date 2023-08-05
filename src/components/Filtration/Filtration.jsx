@@ -1,10 +1,16 @@
 import propTypes from 'prop-types'
 import { Input, Label } from "components/Form/Form.styled";
+import { useDispatch, useSelector } from 'react-redux';
+import { getFilter } from 'redux/selectors';
+import { addFilter } from 'redux/filterSlice';
 
-export const Filtration = ({filtration,onChange}) =>{
+export const Filtration = () =>{
+    const dispatch = useDispatch();
+    const filter = useSelector(getFilter);
+
     const handleChange = evt =>{
         const {value} = evt.target;
-        onChange(value);
+        dispatch(addFilter(value));
     };
         return(
             <>
@@ -13,8 +19,9 @@ export const Filtration = ({filtration,onChange}) =>{
                 type="text"
                 id="input-search"
                 onChange={handleChange}
+                onSubmit={addFilter}
                 name="filtration"
-                value={filtration}
+                value={filter}
                 />
             </Label>
             </>
