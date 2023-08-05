@@ -7,18 +7,11 @@ import {Container,
   Breaker,
   Message,} from './App.styled';
 import { useSelector } from "react-redux";
-import { getContacts, getFilter } from "redux/selectors";
+import { getContacts, selectVisibleContacts } from "redux/selectors";
 
 export const App =()=> {
   const contacts = useSelector(getContacts)
-  const filter = useSelector(getFilter)
-
-
-
-    const filteredContacts = Object.values(contacts.contacts).filter(({name})=>{
-      return name.toLowerCase().includes(filter.filter.toLowerCase())
-    });
-
+  const filteredContacts = useSelector(selectVisibleContacts)
     return(
       <Container>
         <FirstTitle>Phonebook</FirstTitle>
@@ -27,13 +20,9 @@ export const App =()=> {
         <Breaker>
           {contacts.contacts.length > 0 ? (
             <>
-              <Filtration
-              filtration={filter.filter}
-              />
+              <Filtration/>
               {filteredContacts.length > 0?(
-                <ListContacts
-                contacts={filteredContacts}
-                />
+                <ListContacts/>
             
           ):(
             <Message>
