@@ -1,11 +1,15 @@
 import { useState } from "react";
 import { Forma, Label, Input, BtnSubmit } from "./Form.styled";
-import propTypes from 'prop-types'
 import {nanoid} from 'nanoid'
+import { useDispatch, useSelector } from "react-redux";
+import { addContact } from "redux/contactsSlice";
+import { getContacts } from "redux/selectors";
 
-export const Form =({onSubmit})=>{
+export const Form =()=>{
     const [name,setName] = useState("");
     const [number,setNumber] = useState("");
+    const dispatch = useDispatch();
+    const contacts = useSelector(getContacts)
 
     const formChangeName = evt => {
         const {value} = evt.target;
@@ -15,7 +19,16 @@ export const Form =({onSubmit})=>{
         const {value} = evt.target;
         setNumber(value);
     }
-
+    const onSubmit = newContact =>{
+        const sameContact = contacts.contacts.find(
+            ({name,number})=>name.toLowerCase()===newContact.name.toLowerCase() || number===newContact.number
+          );
+          if (sameContact) {
+            alert(`${newContact.name} or ${newContact.number} is already exists.`)
+            return
+          }
+          dispatch(addContact(newContact))
+    }
     const formSubmit = evt =>{
         evt.preventDefault();
         const contact = {name,number,id:nanoid()};
@@ -60,7 +73,3 @@ export const Form =({onSubmit})=>{
         )
 }
 
-
-Form.propTypes = {
-    onSubmit: propTypes.func.isRequired,
-}

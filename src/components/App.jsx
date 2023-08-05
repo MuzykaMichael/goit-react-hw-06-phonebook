@@ -6,39 +6,12 @@ import {Container,
   SecondTitle,
   Breaker,
   Message,} from './App.styled';
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { getContacts, getFilter } from "redux/selectors";
-import { addContact, deleteContact } from "redux/contactsSlice";
-import { addFilter } from "redux/filterSlice";
 
 export const App =()=> {
-  const dispatch = useDispatch();
   const contacts = useSelector(getContacts)
   const filter = useSelector(getFilter)
-  console.log(contacts.contacts[0].name)
-
-  const formSubmitHandle = newContact =>{
-    const sameContact = contacts.contacts.find(
-      ({name,number})=>name.toLowerCase()===newContact.name.toLowerCase() || number===newContact.number
-    );
-    if (sameContact) {
-      alert(`${newContact.name} or ${newContact.number} is already exists.`)
-      return
-    }
-    dispatch(addContact(newContact))
-  };
-
-
-
-
-  
-  const filterHandle = nameQuery => {
-    dispatch(addFilter(nameQuery));
-  };
-
-  const contactsDeleteHandler = idToDelete => {
-    dispatch(deleteContact(idToDelete))
-  }
 
 
 
@@ -49,19 +22,17 @@ export const App =()=> {
     return(
       <Container>
         <FirstTitle>Phonebook</FirstTitle>
-        <Form onSubmit={formSubmitHandle}/>
+        <Form />
         <SecondTitle>Contacts</SecondTitle>
         <Breaker>
-          {contacts.length > 0 ? (
+          {contacts.contacts.length > 0 ? (
             <>
               <Filtration
-              filtration={filter}
-              onChange={filterHandle}
+              filtration={filter.filter}
               />
               {filteredContacts.length > 0?(
                 <ListContacts
                 contacts={filteredContacts}
-                handleDelete={contactsDeleteHandler}
                 />
             
           ):(
